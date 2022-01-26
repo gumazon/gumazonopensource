@@ -2,7 +2,7 @@
 
 Road map from dev to distribution
 
-1. __DEV__:
+1. __DEV__
    
 2. __BUILD__
 
