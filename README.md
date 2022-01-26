@@ -100,8 +100,8 @@ echo '__p*' >> .gitignore
 
 
 ## setup  /proj/root/FILES
-_project=${1} 
-_email=${2}  
+_project=${1}     # 'ad'
+_email=${2}   # 'gumshoe.media.inc@gmail.com'
 _url=${3}
 
 _root=${_project}
@@ -173,7 +173,7 @@ EOF
 git init
 
 # Repo Remote Settings: Create Remote Repo <eg: on github.com> and get settings: 
-# -------------------- 
+# --------------------  <git@github.com:gumazon/ad.git || https://github.com/gumazon/ad.git>
 REPO_KEY='github'
 REPO_LOC='github.com'
 REPO_USER='gumazon'
@@ -221,20 +221,157 @@ import pydoc
 ```
 
 ## Testing
+
+### Unit Testing
+
+Using: `pytest`
+
 ```shell
 
-pytest
+pip install -U pytest
+pytest --version
+pytest init
 
 ```
 
 ## Versioning
 
+### db versioning 
+
+Using: `alembic`
+
+```shell
+# In /project_root_dir:
+alembic init .alembic
+echo 'alembic.ini' >> .gitignore
+echo 'db' >> .gitignore
+
+# In /project_root_dir/alembic.ini, change:
+sqlalchemy.url = sqlite:///sqlitedb.sqlite
+
+# upgrade from declarative_base: In /project_root_dir/db/env.py, change:
+echo << EOF
+
+# In ".alembic/env.py"
+# --------------------
+model = runpy.run_path('../../user/user/user/model.py')
+target_metadata = model['Base'].metadata
+
+EOF
+
+# autogenerate a Baseline Script:  or $( alembic revision -m "$(basename `pwd`)s" )
+alembic revision --autogenerate -m "add $(basename `pwd`)s table"
+
+# generate tables: upgrade db to the new head
+alembic upgrade head
+
+
+# upgrade from sql: In shell terminal, run:
+# $ alembic upgrade --sql ${start_rev}:${end_rev}
+
+```
+
+
+### package versioning
 ```shell
 
 pumb-version
 
 ```
 
+
 ## Security
 
 [Spring Python](https://docs.spring.io/spring-python/1.2.x/sphinx/html/security.html)
+
+
+
+## API
+
+-  Index:
+
+   url: `GET` `/api/<resource>`
+   
+   handler: `controller.index`
+   
+   response: `[]`
+
+
+-  Show:
+
+   url: `GET` `/api/<resource>/{id}`
+   
+   handler: `controller.show`
+   
+   response: `{}`
+
+
+-  Save:
+
+   url: `POST` `/api/<resource>`  `query_str_from(**kwargs)`
+   
+   handler: `controller.save`
+   
+   response: `[]`
+
+
+-  Update:
+
+   url: `PUT` `/api/<resource>/{id}`  `query_str_from(**kwargs)`
+   
+   handler: `controller.update`
+   
+   response: `{}`
+
+
+-  Delete:
+
+   url: `DELETE` `/api/<resource>/{id}`
+   
+   handler: `controller.delete`
+   
+   response: `[]`
+
+
+
+
+----------
+
+> Workflows
+
+- Create:
+  1. Make dirs
+  2. Make files
+  3. Upload and sync repo
+
+
+- Develop:
+  1. clone repo
+  2. Make changes
+
+
+- Update:
+
+
+- Test:
+  1. Run tests.  
+  2. Commit and push to remote Repo, if passed tests, else exit_update.
+
+
+- Release
+  1. Pump `PKG` and `DB` Versions
+  2. Rebuild files
+  3. Tag repo and push to remote
+
+
+- Distribute
+  * Build
+  * Upload to Hosting Server
+
+
+
+-------------
+> REFS
+
+[About flush](https://www.educba.com/postgresql-flush-privileges/)
+
