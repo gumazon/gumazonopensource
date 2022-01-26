@@ -236,8 +236,5 @@ pumb-version
 ```
 
 ## Security
-```shell
 
-Spring Python
-
-```
+[Spring Python](https://docs.spring.io/spring-python/1.2.x/sphinx/html/security.html)
