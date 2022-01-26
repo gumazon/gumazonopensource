@@ -4,17 +4,17 @@ Road map from dev to distribution
 
 
 - __DEV__
-  - [ x ] [Genesis](https://github.com/gumazon/gumazonopensource/edit/main/README.md#genesis)
+  - [ x ] [Genesis](https://github.com/gumazon/gumazonopensource/blob/main/README.md#genesis)
   
-  - [ x ] [repo](https://github.com/gumazon/gumazonopensource/edit/main/README.md#repo)
+  - [ x ] [repo](https://github.com/gumazon/gumazonopensource/blob/main/README.md#repo)
 
-  - [ x ] [venv](https://github.com/gumazon/gumazonopensource/edit/main/README.md#venv)
+  - [ x ] [venv](https://github.com/gumazon/gumazonopensource/blob/main/README.md#venv)
   
-  - [ x ] [documenting](https://github.com/gumazon/gumazonopensource/edit/main/README.md#documenting)
+  - [ x ] [documenting](https://github.com/gumazon/gumazonopensource/blob/main/README.md#documenting)
   
-  - [ x ] [testing](https://github.com/gumazon/gumazonopensource/edit/main/README.md#testing)
+  - [ x ] [testing](https://github.com/gumazon/gumazonopensource/blob/main/README.md#testing)
 
-  - [ x ] [Versioning](https://github.com/gumazon/gumazonopensource/edit/main/README.md#versioning)
+  - [ x ] [Versioning](https://github.com/gumazon/gumazonopensource/blob/main/README.md#versioning)
 
 - __BUILD__
 
