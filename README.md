@@ -335,9 +335,7 @@ pumb-version
 
 
 
-----------
-
-> Workflows
+## Workflows
 
 - Create:
   1. Make dirs
@@ -370,8 +368,7 @@ pumb-version
 
 
 
--------------
-> REFS
+## REFS
 
 [About flush](https://www.educba.com/postgresql-flush-privileges/)
 
