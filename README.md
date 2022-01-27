@@ -30,6 +30,8 @@ myapp/
 
 |____ ____ `LICENSE.txt`
 
+|____ ____ `HISTORY.rst`
+
 |____ ____ `README.rst`
 
 |____ ____ `setup.py`
@@ -112,6 +114,10 @@ _repo_name=${_pkg}
 _repo_user=`git config user.name`
 _repo_email=`git config user.email`
 
+_version='0.1.0'
+_git_tag_msg='First release on PyPI.'
+
+
 # make /proj/root/pkg directories
 mkdir -p "${_project}"/"${_root}"/"${_pkg}"
 
@@ -133,6 +139,18 @@ EOF
 
 # README.rst
 echo $(python -c "${1}"[2:] | pydoc ad) > "${_project}"/"${_root}"/README.rst
+
+
+# HISTORY.rst
+cat << EOF >>  "${_project}"/"${_root}"/HISTORY.rst
+
+
+${_version} (`date +'%Y-%m-%d'`)
+--------------------------------
+- First release on PyPI."
+
+
+EOF
 
 
 # requirements.txt
