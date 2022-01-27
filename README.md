@@ -30,8 +30,6 @@ myapp/
 
 |____ ____ `LICENSE.txt`
 
-|____ ____ `HISTORY.rst`
-
 |____ ____ `README.rst`
 
 |____ ____ `setup.py`
@@ -39,7 +37,6 @@ myapp/
 |**____ ____ docs/**
 
 |**____ ____ tests/**
-
 
 |**____ ____ myapp/**
 
@@ -87,48 +84,32 @@ myapp/
 
 
 ## Genesis
+
+### BASEDIR
 ```shell
 
 ### src /proj/root/pkg/FILES
+BASEDIR=${1}
 
-_pkg=${_project}
+# Setting VARS
+${HOME}/Public/gumazonopensource/docs/jobs/vars.sh ${BASEDIR}
 
-# __init__.py
-# model.py
-# view.py
-# controller.py
-# __main__.py
-
-echo '.*' >> .gitignore
-echo '__p*' >> .gitignore
-
-
-## setup  /proj/root/FILES
-_project=${1}     # 'ad'
-_email=${2}   # 'gumshoe.media.inc@gmail.com'
-_url=${3}
-
-_root=${_project}
-_pkg=${_project}
-_author=`git config --global user.name`
-
-_repo_name=${_pkg}
-_repo_user=`git config user.name`
-_repo_email=`git config user.email`
-
-_version='0.1.0'
 _git_tag_msg='First release on PyPI.'
 
 
 # make /proj/root/pkg directories
-mkdir -p "${_project}"/"${_root}"/"${_pkg}"
+mkdir -p "${BASEDIR}"/"${CWDIR}"/"${REPO_NAME}"
 
+```
+
+#### LICENSE.txt
+```
 # LICENSE.txt
-cat<< EOF > "${_project}"/"${_root}"/LICENSE.txt
+cat<< EOF > "${BASEDIR}"/"${CWDIR}"/LICENSE.txt
 
 MIT License
 
-Copyright $(date +'%Y') $(_author)
+Copyright $(date +'%Y') $(AUTHOR)
 
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -140,14 +121,14 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 EOF
 
 # README.rst
-echo $(python -c "${1}"[2:] | pydoc ad) > "${_project}"/"${_root}"/README.rst
+echo $(python -c "${1}"[2:] | pydoc ad) > "${BASEDIR}"/"${CWDIR}"/README.rst
 
 
 
 # HISTORY.rst
 #
 # ____ CREATE : New History File:
-cat << EOF > "${_project}"/"${_root}"/HISTORY.rst
+cat << EOF > "${BASEDIR}"/"${CWDIR}"/HISTORY.rst
 =======
 History
 =======
@@ -156,9 +137,9 @@ EOF
 #
 #
 # _____UPDATE: Append New Entry To History File:
-cat << EOF >>  "${_project}"/"${_root}"/HISTORY.rst
+cat << EOF >>  "${BASEDIR}"/"${CWDIR}"/HISTORY.rst
 
-${_version} (`date +'%Y-%m-%d'`)
+${VERSION} (`date +'%Y-%m-%d'`)
 --------------------------------
 - ${_git_tag_msg}
 
@@ -167,27 +148,39 @@ EOF
 
 
 # requirements.txt
-pip freeze >  "${_project}"/"${_root}"/requirements.txt
+pip freeze >  "${BASEDIR}"/"${CWDIR}"/requirements.txt
 
 
 # setup.py
-cat << EOF >  "${_project}"/"${_root}"/setup.py
+cat << EOF >  "${BASEDIR}"/"${CWDIR}"/setup.py
 
 from setuptools import setup, find_packages
 
 with open('requirements.txt', 'r') as _infl:
-  requires = [str(_req) for _req in _infl.readlines()]
+  requirements = [str(_req) for _req in _infl.readlines()]
 
 
 setup(
-    name='${_pkg}',
-    version='0.1.0',
-    url='https://github.com/${_pkg}.git',
-    author='${_author}',
-    author_email='${_email}',
-    description='Provides ${_pkg} Controller of the given DB_URL data to work within the given session.',
+    name='${REPO_NAME}',
+    version='${VERSION}',
+    url='${REPO_LOC}/${REPO_USER}/${REPO_NAME}.git',
+    author='${AUTHOR}',
+    authorAUTHOR_EMAIL='${AUTHOR_EMAIL}',
+    description='Provides ${REPO_NAME} Controller of the given DB_URL data to work within the given session.',
     packages=find_packages(),    
-    install_requires=[str(_req) for _req in requires],
+    install_requires=[str(_req) for _req in requirements],
+    classifiers=[
+        'Development Status :: 2 - Pre-Alpha',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: MIT License',
+        'Natural Language :: English',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+    ]
 )
 
 
@@ -368,13 +361,15 @@ Set Upstream URL
 REPO_KEY='github'
 REPO_LOC='github.com'
 REPO_USER='gumazon'
-REPO_NAME='ad'
+REPO_NAME='gumazonopensource'
 
 # Set Upstream URL: <To remove repo: $ git remote rm origin>
 # ---------------- <https://${REPO_LOC}/${REPO_USER}/${REPO_NAME}.git || 
 #                   git@${REPO_LOC}:${REPO_USER}/${REPO_NAME}.git>
 git remote add ${REPO_KEY} git@${REPO_LOC}:${REPO_USER}/${REPO_NAME}.git
 
+# Example: ====================
+git remote set-url --add origin git@github.com:gumazon/gumazonopensource.git
 ```
 
 
@@ -410,7 +405,7 @@ __log__
 ```shell
 #!/usr/bin/env sh
 
-git log > "docs/log$(date +'%Y%m%d%H%M').rst"
+git log > "docs/timeline.rst"
 
 ```
 
