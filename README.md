@@ -141,13 +141,24 @@ EOF
 echo $(python -c "${1}"[2:] | pydoc ad) > "${_project}"/"${_root}"/README.rst
 
 
-# HISTORY.rst
-cat << EOF >>  "${_project}"/"${_root}"/HISTORY.rst
 
+# HISTORY.rst
+#
+# ____ CREATE : New History File:
+cat << EOF > "${_project}"/"${_root}"/HISTORY.rst
+=======
+History
+=======
+
+EOF
+#
+#
+# _____UPDATE: Append New Entry To History File:
+cat << EOF >>  "${_project}"/"${_root}"/HISTORY.rst
 
 ${_version} (`date +'%Y-%m-%d'`)
 --------------------------------
-- First release on PyPI."
+- ${_git_tag_msg}
 
 
 EOF
