@@ -41,6 +41,15 @@ requirements = [ ]
 
 test_requirements = ['pytest>=3', ]
 
+classifiers=[
+    'Development Status :: 2 - Pre-Alpha',
+    'Intended Audience :: Developers',
+    'License :: OSI Approved :: ${LICENSE_SETUP_CLASSIFIER}',
+    'Natural Language :: English',
+    'Programming Language :: Python :: >=${PY_MIN}',
+    'Programming Language :: Python :: =<${PY_MAX}',
+]
+
 setup(
     author="Gumshoe Media Inc.",
     author_email='admin@gumazon.io',
@@ -64,15 +73,15 @@ setup(
         ],
     },
     install_requires=requirements,
-    license="MIT License",
+    license="${LICENSE_SETUP_TITLE}",
     long_description=readme,
     include_package_data=True,
     keywords='gumazon',
-    name='gumazon',
+    name='${LICENSE_SETUP_TITLE}',
     packages=find_packages(include=['gumazon', 'gumazon.*']),
     test_suite='tests',
     tests_require=['pytest>=3', ],
-    url='https://github.com/gumshoe00/gumazon',
-    version='0.1.1',
+    url='${URL}',
+    version='${VERSION}',
     zip_safe=False,
 )

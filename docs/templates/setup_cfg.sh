@@ -1,22 +1,7 @@
 #!/usr/bin/env sh
 
-: "
+# setup_cfg.sh
 
-__name__ = setup_cfg.sh
-
-__version__ = 0.1.0
-
-__author__ = Gumshoe Media Inc.
-
-__title__ = $(basename ${0}) Adds (setup.cfg) To The Given Package.
-
-__input__ = (ROOT_DIRNAME=/path/to/pkg-root)
-
-__output__ = <ROOT_DIRNAME>/setup.cfg
-
-__requires__ = ['.environ', README.rst, HISTORY.rst, LICENSE.txt]
-
-"
 
 ROOT_DIRNAME=${1}
 

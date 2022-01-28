@@ -35,11 +35,11 @@ if __name__ == '__main__':
         
     if not _file:
         print('Missing File Path!')
-        return
+        pass
         
     if not _attr_name:
         print('Missing Attribute Name!')
-        return
+        pass
 
     print(get(file=_file, attr_name=_attr_name))
     

@@ -1,42 +1,20 @@
 #!/usr/bin/env sh
 
-: "
 
-__name__ = license_gnu3
+SRCDIR=${1}
 
-__version__ = 0.1.0
-
-__author__ = Gumshoe Media Inc.
-
-__title__ = $(basename ${0}) Adds GNU v3 License To The Given Package.
-
-__input__ = (OUTPUT_DIRNAME=/path/to/pkg-root)
-
-__output__ = <OUTPUT_DIRNAME>/LICENSE.txt
-             <OUTPUT_DIRNAME>/environ/license_setup_classifier,
-             <OUTPUT_DIRNAME>/environ/license_setup_title
-
-"
-
-OUTPUT_DIRNAME=${1}
-ENVIRON_DIR="${OUTPUT_DIRNAME}/environ"
-chmod +rwx ${ENVIRON_DIR}
-chmod +rwx ${ENVIRON_DIR}/*
-
-PKG_YEAR=$(cat ${ENVIRON_DIR}/YEAR)
-PKG_TITLE=$(cat ${ENVIRON_DIR}/TITLE)
-PKG_AUTHOR=$(cat ${ENVIRON_DIR}/AUTHOR)
+TITLE=`${PWD}/file_attr.py ${SRCDIR}/__init__.py __title__`
+AUTHOR=`${PWD}/file_attr.py ${SRCDIR}/__init__.py __author__`
+LICENSE_SETUP_TITLE=`${PWD}/file_attr.py ${SRCDIR}/__init__.py __license_setup_title__`
+LICENSE_SETUP_CLASSIFIER=`${PWD}/file_attr.py ${SRCDIR}/__init__.py __license_setup_classifier__`
 
 
-echo 'GNU General Public License v3 (GPLv3)' > ${ENVIRON_DIR}/license_setup_classifier
-echo 'GNU General Public License v3' > ${ENVIRON_DIR}/license_setup_title
-
-cat << EOF > ${OUTPUT_DIRNAME}/LICENSE.txt
+cat << EOF > `dirname ${SRCDIR}`/LICENSE.txt
 GNU GENERAL PUBLIC LICENSE
                       Version 3, 29 June 2007
 
-    ${PKG_TITLE}
-    Copyright (C) ${PKG_YEAR}  ${PKG_AUTHOR}
+    ${TITLE}
+    Copyright (C) `date +'%Y'`  ${AUTHOR}
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
