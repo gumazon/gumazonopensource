@@ -8,11 +8,13 @@ class Application:
     __baseurl__ = 'https://github.com/gumazon/gumazonopensource/blob/main/commons'
 
     def index(self):
+        _exclude = ['__init__']
         _output = ['# gumazonopensource', 'Common Scripts:']
         _dir = Path(__file__).parent.parent.joinpath('commons')
         for f in _dir.iterdir():
             if f != __file__:
-                _output.append('- ['+f.stem+']('+self.__baseurl__+'/'+f.name+')')
+                if f.stem not in _exclude:
+                    _output.append('- ['+f.stem+']('+self.__baseurl__+'/'+f.name+')')
 
         print('output', _output)
         with open(str(Path(__file__).parent.parent.joinpath('README.md')), 'w') as outfl:
