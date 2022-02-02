@@ -13,7 +13,9 @@ def folder(dirname: str):
 def load_index(baseurl, exclude, outdir, indir, name='gumazon'):
     """Rebuild App Index.
 
-    :return: README.md file with the new content.
+    reads subfolders in directory containing this file and adds them to index dictionary.
+
+    :return: outdir/assets/name/index.json. file with list of subpackages of given app [name].
     """
     _app_index = {}
     
