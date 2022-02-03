@@ -1,0 +1,168 @@
+name: psql_db
+
+runs-on: moacos-11
+
+
+# Only run this job if "homebrew" is installed.
+if: brew -v &> /dev/null; echo $? == 0
+
+init:
+  - name: features(psql_db) install psql with homebrew
+    run: brew install postgresql
+
+  - name: features(psql_db) check psql version
+    run: postgres -V
+
+  - name: features(psql_db) start db server with brew
+    run: brew services start postgresql
+
+  - name: features(psql_db) stop db server with brew
+    run: brew services stop postgresql
+
+  - name: features(psql_db) restart db server with brew
+    run: brew services restart postgresql
+
+  - name: features(psql_db) set aliases to start|stop|restart psql server, into '~/.bash_profile or ~/.zshrc'.
+    run:  echo '# ' >> ~/.profilenv; \
+          echo '# PostgreSQL DB Shortcut Commands' >> ~/.profilenv; \
+          echo '# ===============================' >> ~/.profilenv; \
+          echo 'alias pg-start="pg_ctl -D /usr/local/var/postgres start"' >> ~/.profilenv; \
+          echo 'alias pg-stop="pg_ctl -D /usr/local/var/postgres stop"' >> ~/.profilenv; \
+          echo 'alias pg-restart="pg_ctl -D /usr/local/var/postgres restart"' >> ~/.profilenv; \
+          echo '# ================================' >> ~/.profilenv; \
+          echo '# ' >> ~/.profilenv
+
+  - name: fix(psql_db) error on `$ pg-start|stop|restart` using alias <no such file or directory>.
+    run: echo 'Verify postgresql.plist file exists then provide it via a simlink to LaunchAgents ...'; \
+         cat /usr/local/opt/postgresql/homebrew.mxcl.postgresql.plist &> /dev/null; echo $?;\
+         ln -sfv /usr/local/opt/postgresql/homebrew.mxcl.postgresql.plist ~/Library/LaunchAgents
+
+server:
+  # Only run this job if postgresql is installed
+  if: postgresql -V &> /dev/null; echo $? == 0
+
+  enter:
+    in-psql:
+      - name: features(psql_db/server) Connect to psql to be able to run commands.
+        run: psql postgres
+
+      - name: fix(psql_db/server) error on `$ psql` start session ('psql:\ FATAL:\ database <YOUR USER HERE> does not exist')
+        run: createdb <YOUR USER HERE>
+
+      - name: features(psql_db/server) Show connection information <which user is connected?>.
+        run: \conninfo
+
+    in-shell:
+      - name: features(psql_db#connect) Connect to a specific database with a specific user
+        run: psql postgres -U newuser
+
+      - name: features(psql_db#login) Logging using a specific user.  Flag "-W" tells psql we will be entering pw.
+        run: psql -U user_name -d database_name -h 127.0.0.1 -W
+
+  exit:
+    - name: features(psql_db/server) Close the session and leave psql.
+      run: \q
+
+database:
+  get:
+    - name: features(psql_db/database) List all of your actual databases.
+      run: \list
+
+    - name: features(psql_db/database) Connect to another database.
+      run: \c <mydatabasename>
+
+    - name: features(psql_db/database)  List the relations of your currently connected database.
+      run: \d
+
+  post:
+    - name: features(psql_db/database) Create a new database from within "psql" session.
+      run: CREATE DATABASE <db_name>;
+
+    - name: features(psql_db/database) Create a database from outside “psql” session.
+      run: createdb <db_name>
+
+  put:
+    - name: features(psql_db/user/database) To change the connected user while in “psql” mode, type
+      run: \c <DATABASE> <USER_TO_SWITCH>
+
+    - name: features(psql_db/user/database#switch_owner) Change user owner of a database, first, switch to user that is the owner of that database, then do this
+      run: ALTER DATABASE name OWNER TO new_owner;
+
+  delete:
+    - name: features(psql_db/database) Drop a database from within "psql" session.
+      run: DROP DATABASE <db_name>;
+
+    - name: features(psql_db/database) Drop a database from outside “psql” session.
+      run: dropdb <db_name>
+
+user:
+  get:
+    - name: features(psql_db/user) list all users.
+      run: \du
+
+    - name: features(psql_db/user) Show connection information <which user is connected?>.
+      run: \conninfo
+
+    - name: features(psql_db/user) Login.
+      run: psql <DATABASE> <USER>   # eg: $ psql postgres felipe
+
+  post:
+    - name: features(psql_db/user#username) Create a new user/role.
+      run: CREATE USER <username_rolename>;
+
+    - name: features(psql_db/user#password) Change/set user password
+      run: ALTER USER <username_rolename> WITH PASSWORD '<password>';
+
+    - name: features(psql_db/user#login-password) Change/set user login password
+      run: ALTER USER <username_rolename> WITH LOGIN PASSWORD '<password>';
+
+    - name: features(psql_db/user#new) Create role (user) with password - Create new user inside psql terminal, * (pw must be in quotes)
+      run: CREATE ROLE newuser WITH LOGIN PASSWORD '<password>';
+
+    - name: features(psql_db/user) Switch user and create db.
+      run: \c <DATABASE> <USER>   # eg: $ \c postgres felipe
+
+  put:
+    - name: features(psql_db/user#permissions) Edit user permissions, not allowed to create a database.
+      run: ALTER ROLE <username_rolename> NOCREATEDB;
+
+
+table:
+  get:
+    - name: features(psql_db/table) Shows information for a specific table.
+      run: \d <mytablename>
+
+    - name: features(psql_db/table) List tables / relations for this table.
+      run: \dt
+
+  post:
+    - name: features(psql_db/database) Create a new database.
+      run: CREATE TABLE test(id integer, name character(256));
+
+
+refs:
+  Configuring PostgreSQL in your Mac: https://itnext.io/configure-postgresql-on-your-mac-from-scratch-197f8eb4048a
+  SQLAlchemy ORM Connecting to PostgreSQL, from scratch, Create, Fetch, Update and Delete: https://itnext.io/sqlalchemy-orm-connecting-to-postgresql-from-scratch-create-fetch-update-and-delete-a86bc81333dc
+
+
+jobs:
+  init:
+    - $ psql postgres
+    - postgres=# \conninfo  # :=> You are connected to database "postgres" as user "<username>" via socket in "/tmp" at port "5432".
+    - postgres=# CREATE USER <username>;
+    - postgres=# ALTER ROLE <username> NOCREATEDB;
+    - postgres=# CREATE DATABASE <db_name>;
+    - postgres=# ALTER DATABASE <db_name> OWNER TO <username>;
+    - postgres=# \c <db_name> <super-username>  # :=>  You are now connected to database "<db_name>" as user "<super-username>".
+    - [db_name]=# ALTER USER <username> WITH LOGIN PASSWORD '<login-password>';
+    - postgres=# \c <db_name> <username>  # :=>  You are now connected to database "<db_name>" as user "<username>".
+    - [db_name]=# ALTER USER <username> WITH PASSWORD '<password>';
+  login:
+    - psql -U <username> -d <db_name> -h 127.0.0.1 -W
+
+
+
+  py-psql:
+    - pip install sqlalchemy
+    - pip install psycopg2  # pip install psycopg2-binary
+
